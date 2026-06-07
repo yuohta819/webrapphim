@@ -5,6 +5,9 @@ on:
       service_name:
         required: true
         type: string
+      folder_name:
+        required: true
+        type: string
     secrets:
       DOCKERHUB_USERNAME:
         required: true
