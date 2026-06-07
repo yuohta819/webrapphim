@@ -1,0 +1,20 @@
+name: Payement Service CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      # Đường dẫn tới code giờ cần bắt đầu từ backend/
+      - 'backend/payementservice/**'
+      - 'backend/commonservice/**'
+      # Đường dẫn tới chính file này giờ nằm ở gốc
+      - '.github/workflows/payementservice.yml'
+
+jobs:
+  call-template:
+    # Trỏ đúng đường dẫn mới 
+    uses: ./.github/workflows/service-template.yml
+    with:
+      service_name: 'payement-service'  # Tên đúng trên K8s
+      folder_name: 'payementservice'    # Tên đúng trong thư mục
+    secrets: inherit
