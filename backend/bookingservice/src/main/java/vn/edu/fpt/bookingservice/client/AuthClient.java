@@ -16,3 +16,4 @@ public interface AuthClient {
     @GetMapping("/role-not-member/find/{accountId}")
     ScoreDTO getScoreAccount(@PathVariable("accountId") String id);
 }
+// test

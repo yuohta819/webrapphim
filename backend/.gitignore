@@ -9,3 +9,5 @@ microservices-deploy.yaml
 infrastructure.yaml
 
 application.yaml
+
+actions-runner/
