@@ -42,7 +42,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           # Cập nhật đường dẫn context
-          context: ./backend/${{ inputs.service_name }}
+          context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.service_name }}:latest
 
