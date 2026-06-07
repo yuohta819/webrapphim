@@ -1,22 +1,21 @@
-﻿# Tầng 1: Build ứng dụng
+﻿# Tầng 1: Build
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# 1. Copy thư mục commonservice vào /app/commonservice
-COPY backend/commonservice /app/commonservice
-RUN mvn -f /app/commonservice/pom.xml clean install -DskipTests
+# Copy cả folder backend để giữ cấu trúc project
+COPY backend/commonservice ./commonservice
+COPY backend/bookingservice ./bookingservice
 
-# 2. Copy cấu hình và code của bookingservice
-# Lưu ý: context giờ là thư mục gốc, nên phải dùng đường dẫn backend/bookingservice
-COPY backend/bookingservice/pom.xml .
-COPY backend/bookingservice/src ./src
+# Build commonservice trước
+RUN mvn -f commonservice/pom.xml clean install -DskipTests
 
-RUN mvn clean package -DskipTests
+# Build bookingservice (sẽ tự động lấy commonservice từ local repo đã install)
+RUN mvn -f bookingservice/pom.xml clean package -DskipTests
 
-# Tầng 2: Chạy ứng dụng
+# Tầng 2: Chạy
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-# Lưu ý: đường dẫn target giờ sẽ nằm ở /app/target/
-COPY --from=build /app/target/*.jar app.jar
+# Copy file jar từ target của bookingservice
+COPY --from=build /app/bookingservice/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

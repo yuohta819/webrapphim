@@ -18,5 +18,5 @@ public class BookingserviceApplication {
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 		SpringApplication.run(BookingserviceApplication.class, args);
 	}
-   // t
+   // test
 }
