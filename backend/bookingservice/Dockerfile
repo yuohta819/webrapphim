@@ -7,10 +7,10 @@ COPY backend/commonservice ./commonservice
 COPY backend/bookingservice ./bookingservice
 
 # Build commonservice trước
-RUN mvn -f commonservice/pom.xml clean install -DskipTests
+RUN mvn -f commonservice/pom.xml clean install -DskipTests -q
 
 # Build bookingservice (sẽ tự động lấy commonservice từ local repo đã install)
-RUN mvn -f bookingservice/pom.xml clean package -DskipTests
+RUN mvn -f bookingservice/pom.xml clean package -DskipTests -q
 
 # Tầng 2: Chạy
 FROM eclipse-temurin:21-jre-alpine
