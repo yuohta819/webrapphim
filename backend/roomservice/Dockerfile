@@ -1,20 +1,21 @@
-﻿# Tầng 1: Build ứng dụng
+﻿# Tầng 1: Build
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# 1. Copy cấu hình và mã nguồn của commonservice từ thư mục gốc vào trước
-COPY commonservice /commonservice
-# Tiến hành build và cài đặt commonservice vào kho thư viện local nội bộ của container
-RUN mvn -f /commonservice/pom.xml clean install -DskipTests
+# Copy cả folder backend để giữ cấu trúc project
+COPY backend/commonservice ./commonservice
+COPY backend/roomservice ./roomservice
 
-# 2. Copy cấu hình và code của CHÍNH SERVICE NÀY (Đường dẫn tính từ thư mục gốc)
-COPY roomservice/pom.xml .
-COPY roomservice/src ./src
-RUN mvn clean package -DskipTests
+# Build commonservice trước
+RUN mvn -f commonservice/pom.xml clean install -DskipTests -q
 
-# Tầng 2: Chạy ứng dụng
+# Build roomservice (sẽ tự động lấy commonservice từ local repo đã install)
+RUN mvn -f roomservice/pom.xml clean package -DskipTests -q
+
+# Tầng 2: Chạy
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+# Copy file jar từ target của roomservice
+COPY --from=build /app/roomservice/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

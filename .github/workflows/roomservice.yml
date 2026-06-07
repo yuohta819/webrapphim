@@ -1,0 +1,20 @@
+name: Room Service CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      # Đường dẫn tới code giờ cần bắt đầu từ backend/
+      - 'backend/roomservice/**'
+      - 'backend/commonservice/**'
+      # Đường dẫn tới chính file này giờ nằm ở gốc
+      - '.github/workflows/roomservice.yml'
+
+jobs:
+  call-template:
+    # Trỏ đúng đường dẫn mới 
+    uses: ./.github/workflows/service-template.yml
+    with:
+      service_name: 'room-service'  # Tên đúng trên K8s
+      folder_name: 'roomservice'    # Tên đúng trong thư mục
+    secrets: inherit

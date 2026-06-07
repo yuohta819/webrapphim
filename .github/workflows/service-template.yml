@@ -46,7 +46,7 @@ jobs:
         with:
           # Cập nhật đường dẫn context
           context: .
-          file: ./backend/bookingservice/Dockerfile
+          file: ./backend/${{ inputs.folder_name }}/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.service_name }}:latest
 
