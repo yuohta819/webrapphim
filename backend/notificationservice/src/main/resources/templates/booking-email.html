@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác Nhận Thanh Toán Thành Công</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f6f9fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333333;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            background: linear-gradient(135deg, #f37021 0%, #ff8533 100%);
+            padding: 35px 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .content {
+            padding: 30px 40px;
+        }
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #222222;
+        }
+        .greeting strong {
+            color: #f37021;
+        }
+        .receipt-box {
+            background-color: #fdfdfd;
+            border: 1px solid #eef2f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            position: relative;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .info-table td {
+            padding: 14px 0;
+            border-bottom: 1px solid #f2f5f8;
+            font-size: 15px;
+        }
+        .info-table tr:last-child td {
+            border-bottom: none;
+        }
+        .label {
+            color: #666666;
+            width: 40%;
+        }
+        .value {
+            font-weight: 600;
+            color: #222222;
+            text-align: right;
+        }
+        .status-badge {
+            background-color: #e6f7ed;
+            color: #27ae60;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .qr-section {
+            text-align: center;
+            margin: 25px 0 10px 0;
+            padding: 15px;
+            background-color: #fbfbfb;
+            border-radius: 8px;
+        }
+        .qr-code {
+            border: 1px solid #e2e8f0;
+            padding: 4px;
+            background-color: #ffffff;
+        }
+        .qr-hint {
+            font-size: 13px;
+            color: #777777;
+            margin-top: 8px;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+            border-top: 1px solid #eeeeee;
+            line-height: 1.6;
+        }
+        .footer a {
+            color: #f37021;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="email-container">
+        <div class="header">
+            <h1>Thanh Toán Thành Công</h1>
+        </div>
+
+        <div class="content">
+            <div class="greeting">
+                Xin chào <strong th:text="${customerName}">Nguyễn Văn A</strong>,
+            </div>
+            <p style="line-height: 1.5; color: #555555; margin-bottom: 25px;">
+                Hệ thống <b>FPT Ticket</b> xác nhận đã nhận đầy đủ khoản thanh toán cho đơn hàng của bạn. Dưới đây là thông tin biên lai chi tiết của giao dịch này:
+            </p>
+
+            <div class="receipt-box">
+                <table class="info-table">
+                    <tr>
+                        <td class="label">Mã đơn hàng (Booking ID)</td>
+                        <td class="value" style="color: #f37021;" th:text="${bookingId}">#BK9923</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Rạp: </td>
+                        <td class="value" th:text="${nameRoom}">FPT Room Nguyễn Văn Cừ</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Thời gian tạo đơn</td>
+                        <td class="value" th:text="${#temporals.format(createAt, 'HH:mm - dd/MM/yyyy')}">20:15 - 30/05/2026</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Suất chiếu</td>
+                        <td class="value" th:text="${showTime}">19:30 - 30/05/2026</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Chi tiết sản phẩm</td>
+                        <td class="value" th:text="|Ghế: ${seats}|">Ghế: G12, G13</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Tổng số tiền</td>
+                        <td class="value" style="font-size: 16px; color: #222222;" th:text="|${totalPrice} VND|">240.000 VND</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Trạng thái giao dịch</td>
+                        <td class="value">
+                            <span class="status-badge">Đã thanh toán</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="qr-section">
+                <img class="qr-code" th:src="${qrCodeUrl}" alt="Receipt QR Code" width="130" height="130"/>
+                <div class="qr-hint">Quét mã để kiểm tra trạng thái hoặc tra cứu hóa đơn điện tử trực tuyến.</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Đây là thông báo thanh toán điện tử tự động, vui lòng không trả lời thư này.</p>
+            <p>Nếu có bất kỳ thắc mắc nào về hóa đơn, vui lòng gọi Hotline: <b>1900 xxxx</b> hoặc gửi mail về <a href="mailto:support@fpt.edu.vn">support@fpt.edu.vn</a></p>
+            <p>&copy; 2026 FPT Ticket Finance. All rights reserved.</p>
+        </div>
+    </div>
+
+</body>
+</html>
