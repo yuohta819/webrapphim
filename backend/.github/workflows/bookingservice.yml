@@ -1,15 +1,18 @@
 name: Booking Service CI/CD
+
 on:
   push:
     branches: [ "main" ]
     paths:
-      - 'bookingservice/**'
-      - 'commonservice/**'
-      - '.github/workflows/bookingservice.yml'
+      # Cập nhật đường dẫn để khớp với cấu trúc thư mục thực tế của bạn
+      - 'backend/bookingservice/**'
+      - 'backend/commonservice/**'
+      - 'backend/.github/workflows/bookingservice.yml'
 
 jobs:
   call-template:
-    uses: ./.github/workflows/service-template.yml
+    # Trỏ đúng đường dẫn đến file template đang nằm trong backend
+    uses: ./backend/.github/workflows/service-template.yml
     with:
       service_name: 'bookingservice'
-    secrets: inherit # Tự động lấy các secrets trong repo
+    secrets: inherit
