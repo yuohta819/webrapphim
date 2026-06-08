@@ -36,46 +36,128 @@ spring:
           uri: lb://movie-service
           predicates:
             - Path=/movieservice/**
-
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # KeyResolver bean dùng để xác định giới hạn theo IP
+                key-resolver: "#{@ipKeyResolver}"
+                # Số lượng token được thêm vào mỗi giây (1/10 = 0.1)
+                redis-rate-limiter.replenishRate: 1
+                # Số lượng request tối đa trong "Burst" (để đạt đúng 1 req/10s)
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
         - id: room-service
           uri: lb://room-service
           predicates:
             - Path=/roomservice/**
-
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # KeyResolver bean dùng để xác định giới hạn theo IP
+                key-resolver: "#{@ipKeyResolver}"
+                # Số lượng token được thêm vào mỗi giây (1/10 = 0.1)
+                redis-rate-limiter.replenishRate: 1
+                # Số lượng request tối đa trong "Burst" (để đạt đúng 1 req/10s)
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
         - id: booking-service
           uri: lb://booking-service
           predicates:
             - Path=/bookingservice/**
-
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # KeyResolver bean dùng để xác định giới hạn theo IP
+                key-resolver: "#{@ipKeyResolver}"
+                # Số lượng token được thêm vào mỗi giây (1/10 = 0.1)
+                redis-rate-limiter.replenishRate: 1
+                # Số lượng request tối đa trong "Burst" (để đạt đúng 1 req/10s)
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
         - id: ticket-service
           uri: lb://ticket-service
           predicates:
             - Path=/ticketservice/**
-
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # KeyResolver bean dùng để xác định giới hạn theo IP
+                key-resolver: "#{@ipKeyResolver}"
+                # Số lượng token được thêm vào mỗi giây (1/10 = 0.1)
+                redis-rate-limiter.replenishRate: 1
+                # Số lượng request tối đa trong "Burst" (để đạt đúng 1 req/10s)
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
         - id: payment-service
           uri: lb://payment-service
           predicates:
             - Path=/paymentservice/**
-
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # KeyResolver bean dùng để xác định giới hạn theo IP
+                key-resolver: "#{@ipKeyResolver}"
+                # Số lượng token được thêm vào mỗi giây (1/10 = 0.1)
+                redis-rate-limiter.replenishRate: 1
+                # Số lượng request tối đa trong "Burst" (để đạt đúng 1 req/10s)
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
         - id: promotion-service
           uri: lb://promotion-service
           predicates:
             - Path=/promotionservice/**
-
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # KeyResolver bean dùng để xác định giới hạn theo IP
+                key-resolver: "#{@ipKeyResolver}"
+                # Số lượng token được thêm vào mỗi giây (1/10 = 0.1)
+                redis-rate-limiter.replenishRate: 1
+                # Số lượng request tối đa trong "Burst" (để đạt đúng 1 req/10s)
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
         - id: bankaccount-service
           uri: lb://bankaccount-service
           predicates:
             - Path=/bankaccountservice/**
-
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # KeyResolver bean dùng để xác định giới hạn theo IP
+                key-resolver: "#{@ipKeyResolver}"
+                # Số lượng token được thêm vào mỗi giây (1/10 = 0.1)
+                redis-rate-limiter.replenishRate: 1
+                # Số lượng request tối đa trong "Burst" (để đạt đúng 1 req/10s)
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
         - id: dashboard-service
           uri: lb://dashboard-service
           predicates:
             - Path=/dashboardservice/**
-
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # KeyResolver bean dùng để xác định giới hạn theo IP
+                key-resolver: "#{@ipKeyResolver}"
+                # Số lượng token được thêm vào mỗi giây (1/10 = 0.1)
+                redis-rate-limiter.replenishRate: 1
+                # Số lượng request tối đa trong "Burst" (để đạt đúng 1 req/10s)
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
         - id: analytics-service
           uri: lb://analytics-service
           predicates:
             - Path=/analyticsservice/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # KeyResolver bean dùng để xác định giới hạn theo IP
+                key-resolver: "#{@ipKeyResolver}"
+                # Số lượng token được thêm vào mỗi giây (1/10 = 0.1)
+                redis-rate-limiter.replenishRate: 1
+                # Số lượng request tối đa trong "Burst" (để đạt đúng 1 req/10s)
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
       discovery:
         locator:
           enabled: true 
@@ -90,7 +172,7 @@ springdoc:
     tagsSorter: alpha
   gateway:
     discovered-microservices:
-      enabled: true
+      enabled: false
       # Loại bỏ các service nội bộ của Spring Cloud nếu không cần show API
       ignored-services: api-gateway, discovery-server 
 # ===================================================================
