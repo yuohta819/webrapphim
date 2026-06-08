@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: dashboard-service
+server:
+  port: 8092
+  servlet:
+    context-path: /dashboardservice
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE} # URL Eureka của bạn
+  instance:
+    # Ép service đăng ký bằng IP thay vì Hostname (MSI.mshome.net)
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+springdoc:
+  api-docs:
+    # Đường dẫn để lấy file JSON định nghĩa API (Ví dụ: http://localhost:8081/v3/api-docs)
+    path: /v3/api-docs

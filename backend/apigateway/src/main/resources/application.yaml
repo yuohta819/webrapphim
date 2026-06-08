@@ -1,0 +1,95 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/userservice/**
+
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/authservice/**
+        - id: movie-service
+          uri: lb://movie-service
+          predicates:
+            - Path=/movieservice/**
+
+        - id: room-service
+          uri: lb://room-service
+          predicates:
+            - Path=/roomservice/**
+
+        - id: booking-service
+          uri: lb://booking-service
+          predicates:
+            - Path=/bookingservice/**
+
+        - id: ticket-service
+          uri: lb://ticket-service
+          predicates:
+            - Path=/ticketservice/**
+
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/paymentservice/**
+
+        - id: promotion-service
+          uri: lb://promotion-service
+          predicates:
+            - Path=/promotionservice/**
+
+        - id: bankaccount-service
+          uri: lb://bankaccount-service
+          predicates:
+            - Path=/bankaccountservice/**
+
+        - id: dashboard-service
+          uri: lb://dashboard-service
+          predicates:
+            - Path=/dashboardservice/**
+
+        - id: analytics-service
+          uri: lb://analytics-service
+          predicates:
+            - Path=/analyticsservice/**
+      discovery:
+        locator:
+          enabled: true 
+          lower-case-service-id: true 
+
+# ==================== ĐOẠN SỬA ĐỔI CHO GATEWAY ====================
+springdoc:
+  enable-native-support: true
+  swagger-ui:
+    # Sắp xếp các danh mục dịch vụ theo bảng chữ cái cho đẹp mắt
+    operationsSorter: alpha
+    tagsSorter: alpha
+  gateway:
+    discovered-microservices:
+      enabled: true
+      # Loại bỏ các service nội bộ của Spring Cloud nếu không cần show API
+      ignored-services: api-gateway, discovery-server 
+# ===================================================================
+# ===================================================================
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+jwt:
+  secret: ${JWT_SECRET}

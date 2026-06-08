@@ -1,13 +1,13 @@
 microservices-deploy.yaml
 infrastructure.yaml
 note.txt
-application.properties
+
 application-prod.properties
 application-dev.properties
 .env
 microservices-deploy.yaml
 infrastructure.yaml
 
-application.yaml
+
 
 actions-runner/

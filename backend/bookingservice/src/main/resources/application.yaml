@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: booking-service
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*" # Đã sửa: Thụt lề chuẩn YAML
+server:
+  port: 8086
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE} # URL Eureka của bạn
+  instance:
+    # Ép service đăng ký bằng IP thay vì Hostname (MSI.mshome.net)
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+springdoc:
+  api-docs:
+    # Đường dẫn để lấy file JSON định nghĩa API (Ví dụ: http://localhost:8081/v3/api-docs)
+    path: /v3/api-docs

@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: analytics-service
+    
+  datasource:
+    url: ${CLICKHOUSE_URL}
+    username: ${CLICKHOUSE_USER}
+    password: ${CLICKHOUSE_PASSWORD}
+    driver-class-name: com.clickhouse.jdbc.ClickHouseDriver
+    hikari:
+      maximum-pool-size: 10 # ClickHouse không cần quá nhiều connection pool lớn như MySQL
+      minimum-idle: 2
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # ĐÃ SỬA: Đổi từ JsonDeserializer sang StringDeserializer ở dòng dưới đây
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+server:
+  port: 8092
+  servlet:
+    context-path: /analyticsservice
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE}
+  instance:
+    # Ép service đăng ký bằng IP thay vì Hostname (MSI.mshome.net)
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+springdoc:
+  api-docs:
+    # Đường dẫn để lấy file JSON định nghĩa API (Ví dụ: http://localhost:8081/v3/api-docs)
+    path: /v3/api-docs
