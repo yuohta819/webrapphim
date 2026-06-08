@@ -36,7 +36,7 @@ public class MovieController {
             return movieService.createMovie(movie);
         } catch (Exception e) {
             return ResponseEntity
-                    .ok(new ErrorMessage("409", "Lỗi dữ liệu không hợp lệ!!!!.", HttpStatus.INTERNAL_SERVER_ERROR));
+                    .ok(new ErrorMessage("409", "Lỗi dữ liệu không hợp lệ!!!!.",e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
 
         }
     }

@@ -35,7 +35,7 @@ public class OtpService {
         if (!isAllowed(email)) {
             // Ném ra một Custom Exception để Controller bắt và trả về 429
             return ResponseEntity
-                .ok(new ErrorMessage("429", "Không được gửi quá nhiều mã!!!", HttpStatus.TOO_MANY_REQUESTS));
+                .ok(new ErrorMessage("429", "Không được gửi quá nhiều mã!!!", "null", HttpStatus.TOO_MANY_REQUESTS));
         }
         // Lưu vào Redis với TTL là 5 phút
         redisTemplate.opsForValue().set(key, otpCode, Duration.ofMinutes(OTP_VALID_DURATION_MINUTES));
@@ -56,7 +56,7 @@ public class OtpService {
         String savedOtp = redisTemplate.opsForValue().get(key);
         System.out.println(savedOtp);
         if (savedOtp == null || !savedOtp.equalsIgnoreCase(userOtp)) {
-            return ResponseEntity.ok(new vn.edu.fpt.commonservice.model.ErrorMessage("404", "Mã OTP không tồn tại hoặc sai",
+            return ResponseEntity.ok(new vn.edu.fpt.commonservice.model.ErrorMessage("404", "Mã OTP không tồn tại hoặc sai", "null",
                     HttpStatus.NOT_FOUND));
 
         }

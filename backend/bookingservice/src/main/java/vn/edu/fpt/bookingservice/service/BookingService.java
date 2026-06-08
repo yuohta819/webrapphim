@@ -76,7 +76,7 @@ public class BookingService {
         PromotionDTO promotionDTO = new PromotionDTO();
         if (movieClient.checkBookingValid(booking.getMovieId(), booking.getRoomId(), booking.getShowTimeId())) {
             return ResponseEntity
-                    .ok(new ErrorMessage("404", "Không tìm thấy khung giờ phù hợp!!!", HttpStatus.NOT_FOUND));
+                    .ok(new ErrorMessage("404", "Không tìm thấy khung giờ phù hợp!!!", "null", HttpStatus.NOT_FOUND));
         }
 
         // 5. Truyền danh sách đã bóc tách vào hàm validate như bình thường
@@ -86,7 +86,7 @@ public class BookingService {
         String bookingId = getBookingId();
         if (bookingId.equals("error")) {
             return ResponseEntity
-                    .ok(new ErrorMessage("500", "Lỗi Server. Vui lòng thử lại sau!!!", HttpStatus.BAD_REQUEST));
+                    .ok(new ErrorMessage("500", "Lỗi Server. Vui lòng thử lại sau!!!", "null", HttpStatus.BAD_REQUEST));
         }
         booking.setBookingId(bookingId);
         booking.setStatus("PENDING");
@@ -99,7 +99,7 @@ public class BookingService {
         System.out.println("Tổng tiền thực tế: " + calculatedTotalPrice);
         ScoreDTO scoreDTO = authClient.getScoreAccount(userId);
         if (scoreDTO == null) {
-            return ResponseEntity.ok(new ErrorMessage("404", "Không tìm thấy tài khoản hợp lệ!!!",
+            return ResponseEntity.ok(new ErrorMessage("404", "Không tìm thấy tài khoản hợp lệ!!!", "null",
                     HttpStatus.NOT_FOUND));
         }
         Double score = 0.0;
@@ -122,7 +122,7 @@ public class BookingService {
         if (booking.getPromotionId() != null) {
             promotionDTO = promotionClient.getPromotion(booking.getPromotionId());
             if (promotionDTO == null) {
-                return ResponseEntity.ok(new ErrorMessage("500", "Dữ liệu bị thay đổi. Vui lòng tải lại trang",
+                return ResponseEntity.ok(new ErrorMessage("500", "Dữ liệu bị thay đổi. Vui lòng tải lại trang", "null",
                         HttpStatus.INTERNAL_SERVER_ERROR));
             }
             if (promotionDTO.getDiscountLevel() > 0 && resultTotalPrice > 0) {
@@ -145,14 +145,14 @@ public class BookingService {
                             HttpStatus.ACCEPTED.name(), LocalDate.now()));
         }
         return ResponseEntity
-                .ok(new ErrorMessage("500", "Lỗi tạo đơn hàng. Vui lòng thử lại sau!!!", HttpStatus.BAD_REQUEST));
+                .ok(new ErrorMessage("500", "Lỗi tạo đơn hàng. Vui lòng thử lại sau!!!", "null", HttpStatus.BAD_REQUEST));
     }
 
     public ResponseEntity<?> findBookingId(String bookingId) {
         Optional<Booking> booking = bookingRepository.findById(bookingId);
         if (booking.isEmpty()) {
             return ResponseEntity
-                    .ok(new ErrorMessage("404", "Không tìm thấy đơn Booking", HttpStatus.NOT_FOUND));
+                    .ok(new ErrorMessage("404", "Không tìm thấy đơn Booking", "null", HttpStatus.NOT_FOUND));
         }
         return ResponseEntity.ok(booking.get());
     }
@@ -338,7 +338,7 @@ public class BookingService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity
-                    .ok(new ErrorMessage("500", "Lỗi dữ liệu vui lòng tải lại trang!!!!", HttpStatus.NOT_FOUND));
+                    .ok(new ErrorMessage("500", "Lỗi dữ liệu vui lòng tải lại trang!!!!",e.getMessage(), HttpStatus.NOT_FOUND));
         }
     }
 

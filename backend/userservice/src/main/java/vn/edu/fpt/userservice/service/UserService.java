@@ -40,14 +40,14 @@ public class UserService {
         accountMember.getAccountMap().setRegisterDate(LocalDateTime.now());
         if (accountMember.getAccountMap().getPhone().length() != 10) {
             kafkaTemplate.send(TOPIC_ACCOUNT_ROLLBACK, "Same Phone");
-            return ResponseEntity.ok(new ErrorMessage("400", "Số điện thoại phải đủ 10 số", HttpStatus.BAD_REQUEST));
+            return ResponseEntity.ok(new ErrorMessage("400", "Số điện thoại phải đủ 10 số", "null", HttpStatus.BAD_REQUEST));
         }
         boolean count = accountRepository.checkExistByEmailOrPhoneOrIdCard(accountMember.getAccountMap().getPhone(),
                 accountMember.getAccountMap().getIdentityCard());
         if (count) {
             kafkaTemplate.send(TOPIC_ACCOUNT_ROLLBACK, accountMember.getAccountMap().getEmail());
             return ResponseEntity
-                    .ok(new ErrorMessage("409", "Email, ID Card hoặc Phone đã được đăng kí ", HttpStatus.CONFLICT));
+                    .ok(new ErrorMessage("409", "Email, ID Card hoặc Phone đã được đăng kí ", "null", HttpStatus.CONFLICT));
         }
         Account account = new Account();
         account.setUserId(accountMember.getAccountMap().getUserId());
@@ -57,7 +57,7 @@ public class UserService {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorMessage("500", "Lỗi hệ thống khi gửi event", HttpStatus.INTERNAL_SERVER_ERROR));
+                    .body(new ErrorMessage("500", "Lỗi hệ thống khi gửi event",e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
         return ResponseEntity.ok(new SuccessMessage("200", "Tạo tài khoản thành công", "SUCCESS", LocalDate.now()));
     }
@@ -76,14 +76,14 @@ public class UserService {
 
             if (account == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ErrorMessage("404", "Không tìm thấy người dùng!", HttpStatus.NOT_FOUND));
+                        .body(new ErrorMessage("404", "Không tìm thấy người dùng!", "null", HttpStatus.NOT_FOUND));
             }
 
             return ResponseEntity.ok(account);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorMessage("500", "Có lỗi hệ thống xảy ra. Vui lòng thử lại sau!",
+                    .body(new ErrorMessage("500", "Có lỗi hệ thống xảy ra. Vui lòng thử lại sau!",e.getMessage(),
                             HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
@@ -98,7 +98,7 @@ public class UserService {
             }
             int result = accountRepository.updateroleBank(userId, isBank);
             if (result == 0) {
-                return ResponseEntity.ok(new ErrorMessage("400", "Tài khoản không tồn tại", HttpStatus.BAD_REQUEST));
+                return ResponseEntity.ok(new ErrorMessage("400", "Tài khoản không tồn tại", "null", HttpStatus.BAD_REQUEST));
             }
             return ResponseEntity.ok(
                     new SuccessMessage("200", "Cập nhật trạng thái hoàn tiền thành công!!!!", "SUCCESS",
@@ -106,7 +106,7 @@ public class UserService {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorMessage("500", "Có lỗi hệ thống xảy ra. Vui lòng thử lại sau!",
+                    .body(new ErrorMessage("500", "Có lỗi hệ thống xảy ra. Vui lòng thử lại sau!",e.getMessage(),
                             HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
@@ -122,7 +122,7 @@ public class UserService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity
-                    .ok(new ErrorMessage("500", "Lỗi dữ liệu vui lòng tải lại trang!!!!", HttpStatus.NOT_FOUND));
+                    .ok(new ErrorMessage("500", "Lỗi dữ liệu vui lòng tải lại trang!!!!",e.getMessage(), HttpStatus.NOT_FOUND));
         }
     }
 

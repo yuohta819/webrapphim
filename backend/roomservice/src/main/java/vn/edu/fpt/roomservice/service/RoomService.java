@@ -159,7 +159,7 @@ public class RoomService {
         } catch (Exception e) {
             return ResponseEntity.ok(
                     new ErrorMessage(
-                            "500",
+                            "500", "Lỗi!!!",
                             e.getMessage(),
                             HttpStatus.INTERNAL_SERVER_ERROR));
         }
@@ -169,12 +169,12 @@ public class RoomService {
         try {
             Integer.parseInt(roomId);
         } catch (Exception e) {
-            return ResponseEntity.ok(new ErrorMessage("500", "Dữ liệu bị lỗi. Vui lòng tải lại trang!!!",
+            return ResponseEntity.ok(new ErrorMessage("500", "Dữ liệu bị lỗi. Vui lòng tải lại trang!!!",e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR));
         }
         int result = roomRepository.softDeleteRoom(Long.parseLong(roomId));
         if (result == 0) {
-            return ResponseEntity.ok(new ErrorMessage("500", "Dữ liệu bị lỗi. Vui lòng tải lại trang!!!",
+            return ResponseEntity.ok(new ErrorMessage("500", "Dữ liệu bị lỗi. Vui lòng tải lại trang!!!", "null",
                     HttpStatus.INTERNAL_SERVER_ERROR));
         }
         return ResponseEntity.ok(

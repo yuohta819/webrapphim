@@ -39,7 +39,7 @@ public class TicketService {
     public ResponseEntity<?> findTicket(String ticketId) {
         Ticket ticket = ticketRepository.findByTicketIdAndIsDeleted(ticketId, false);
         if (ticket == null) {
-            return ResponseEntity.ok(new ErrorMessage("404", "Vé không tồn tại", HttpStatus.NOT_FOUND));
+            return ResponseEntity.ok(new ErrorMessage("404", "Vé không tồn tại", "null", HttpStatus.NOT_FOUND));
         }
         return ResponseEntity.ok(ticket);
     }

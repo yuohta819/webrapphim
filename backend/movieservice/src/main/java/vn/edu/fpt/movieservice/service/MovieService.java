@@ -89,39 +89,39 @@ public class MovieService {
         try {
             if (movie == null) {
                 return ResponseEntity
-                        .ok(new ErrorMessage("400", "Dữ liệu phim không được để trống", HttpStatus.BAD_REQUEST));
+                        .ok(new ErrorMessage("400", "Dữ liệu phim không được để trống", "null", HttpStatus.BAD_REQUEST));
             }
             if (movie.getMovieNameVn() == null || movie.getMovieNameVn().trim().isEmpty()) {
                 return ResponseEntity
-                        .ok(new ErrorMessage("400", "Tên phim tiếng Việt không được để trống", HttpStatus.BAD_REQUEST));
+                        .ok(new ErrorMessage("400", "Tên phim tiếng Việt không được để trống", "null", HttpStatus.BAD_REQUEST));
             }
             if (movie.getMovieNameEnglish() == null || movie.getMovieNameEnglish().trim().isEmpty()) {
                 return ResponseEntity
-                        .ok(new ErrorMessage("400", "Tên phim tiếng Anh không được để trống", HttpStatus.BAD_REQUEST));
+                        .ok(new ErrorMessage("400", "Tên phim tiếng Anh không được để trống", "null", HttpStatus.BAD_REQUEST));
             }
             if (movie.getDirector() == null || movie.getDirector().trim().isEmpty()) {
                 return ResponseEntity
-                        .ok(new ErrorMessage("400", "Tên đạo diễn không được để trống", HttpStatus.BAD_REQUEST));
+                        .ok(new ErrorMessage("400", "Tên đạo diễn không được để trống", "null", HttpStatus.BAD_REQUEST));
             }
             if (movie.getActor() == null || movie.getActor().trim().isEmpty()) {
                 return ResponseEntity
-                        .ok(new ErrorMessage("400", "Danh sách diễn viên không được để trống", HttpStatus.BAD_REQUEST));
+                        .ok(new ErrorMessage("400", "Danh sách diễn viên không được để trống", "null", HttpStatus.BAD_REQUEST));
             }
             if (movie.getDuration() == null || movie.getDuration() <= 0) {
                 return ResponseEntity
-                        .ok(new ErrorMessage("400", "Thời lượng phim phải lớn hơn 0 phút", HttpStatus.BAD_REQUEST));
+                        .ok(new ErrorMessage("400", "Thời lượng phim phải lớn hơn 0 phút", "null", HttpStatus.BAD_REQUEST));
             }
             if (movie.getVersion() == null || movie.getVersion().trim().isEmpty()) {
                 return ResponseEntity
-                        .ok(new ErrorMessage("400", "Phiên bản phim (2D/3D) không được để trống",
+                        .ok(new ErrorMessage("400", "Phiên bản phim (2D/3D) không được để trống", "null",
                                 HttpStatus.BAD_REQUEST));
             }
             if (movie.getRoomId() == null) {
                 return ResponseEntity
-                        .ok(new ErrorMessage("400", "Mã phòng chiếu không được để trống", HttpStatus.BAD_REQUEST));
+                        .ok(new ErrorMessage("400", "Mã phòng chiếu không được để trống", "null", HttpStatus.BAD_REQUEST));
             }
             if (!checkCimenaExist(movie.getRoomId().longValue())) {
-                return ResponseEntity.ok(new ErrorMessage("404", "Phòng phim không tồn tại!!!", HttpStatus.NOT_FOUND));
+                return ResponseEntity.ok(new ErrorMessage("404", "Phòng phim không tồn tại!!!", "null", HttpStatus.NOT_FOUND));
             }
 
             movie.setCreateAt(LocalDateTime.now());
@@ -138,7 +138,7 @@ public class MovieService {
                         Optional<Type> realType = typeRepository.findById(typeId.intValue());
                         if (realType.isEmpty()) {
                             return ResponseEntity
-                                    .ok(new ErrorMessage("404", "Loại phim không tồn tại", HttpStatus.NOT_FOUND));
+                                    .ok(new ErrorMessage("404", "Loại phim không tồn tại", "null", HttpStatus.NOT_FOUND));
                         }
                         mt.setType(realType.get());
                     }
@@ -164,14 +164,14 @@ public class MovieService {
                         // --- VALIDATE NGÀY CHIẾU (SHOW DATE) ---
                         if (showDate == null) {
                             return ResponseEntity
-                                    .ok(new ErrorMessage("400", "Ngày chiếu không được để trống.",
+                                    .ok(new ErrorMessage("400", "Ngày chiếu không được để trống.", "null",
                                             HttpStatus.BAD_REQUEST));
                         }
 
                         // 1. Kiểm tra ngày quá khứ
                         if (showDate.isBefore(today)) {
                             return ResponseEntity
-                                    .ok(new ErrorMessage("400", "Không được tạo lịch chiếu vào ngày trong quá khứ.",
+                                    .ok(new ErrorMessage("400", "Không được tạo lịch chiếu vào ngày trong quá khứ.", "null",
                                             HttpStatus.BAD_REQUEST));
                         }
 
@@ -180,7 +180,7 @@ public class MovieService {
                         if (showDate.isBefore(minValidDate)) {
                             return ResponseEntity
                                     .ok(new ErrorMessage("400",
-                                            "Lịch chiếu phải được tạo trước ít nhất 3 ngày kể từ ngày hiện tại.",
+                                            "Lịch chiếu phải được tạo trước ít nhất 3 ngày kể từ ngày hiện tại.", "null",
                                             HttpStatus.BAD_REQUEST));
                         }
                         // ----------------------------------------
@@ -200,7 +200,7 @@ public class MovieService {
 
                         if (exists) {
                             return ResponseEntity
-                                    .ok(new ErrorMessage("409", "Khung giờ đã tồn tại.", HttpStatus.CONFLICT));
+                                    .ok(new ErrorMessage("409", "Khung giờ đã tồn tại.", "null", HttpStatus.CONFLICT));
                         }
 
                         schedule.setRoomId(movie.getRoomId().longValue());
@@ -230,7 +230,7 @@ public class MovieService {
         } catch (Exception e) {
             System.out.println(e.getMessage() + " check");
             return ResponseEntity
-                    .ok(new ErrorMessage("409", "Lỗi dữ liệu không hợp lệ!!!!.", HttpStatus.INTERNAL_SERVER_ERROR));
+                    .ok(new ErrorMessage("409", "Lỗi dữ liệu không hợp lệ!!!!.",e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -239,7 +239,7 @@ public class MovieService {
             Integer.parseInt(movieIdClient);
         } catch (Exception e) {
             return ResponseEntity
-                    .ok(new ErrorMessage("500", "Lỗi dữ liệu vui lòng tải lại trang!!!", HttpStatus.BAD_REQUEST));
+                    .ok(new ErrorMessage("500", "Lỗi dữ liệu vui lòng tải lại trang!!!", "null", HttpStatus.BAD_REQUEST));
         }
         Integer movieId = Integer.parseInt(movieIdClient);
         if (movieRepository.findByMovieId(movieId) == null) {
@@ -398,7 +398,7 @@ public class MovieService {
             return ResponseEntity.ok(countMovieDTO);
         } catch (Exception e) {
             return ResponseEntity
-                    .ok(new ErrorMessage("404", "Lỗi dữ liệu vui lòng tải lại trang!!!!", HttpStatus.NOT_FOUND));
+                    .ok(new ErrorMessage("404", "Lỗi dữ liệu vui lòng tải lại trang!!!!", "null", HttpStatus.NOT_FOUND));
         }
     }
 
@@ -443,7 +443,7 @@ public class MovieService {
         try {
             Integer.parseInt(movieId);
         } catch (Exception e) {
-            return ResponseEntity.ok(new ErrorMessage("500", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
+            return ResponseEntity.ok(new ErrorMessage("500", "Lỗi dữ liệu!!!", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
         String key = REDIS_KEY_PREFIX + movieId;
 
@@ -571,18 +571,18 @@ public class MovieService {
             // 1. Kiểm tra phim có tồn tại trong DB không
             if (movie.getMovieId() == null) {
                 return ResponseEntity
-                        .ok(new ErrorMessage("400", "Thiếu ID phim cần cập nhật!!!", HttpStatus.BAD_REQUEST));
+                        .ok(new ErrorMessage("400", "Thiếu ID phim cần cập nhật!!!", "null", HttpStatus.BAD_REQUEST));
             }
 
             Movie existingMovie = movieRepository.findById(movie.getMovieId()).orElse(null);
             if (existingMovie == null) {
                 return ResponseEntity
-                        .ok(new ErrorMessage("404", "Không tìm thấy phim phù hợp!!!", HttpStatus.NOT_FOUND));
+                        .ok(new ErrorMessage("404", "Không tìm thấy phim phù hợp!!!", "null", HttpStatus.NOT_FOUND));
             }
 
             // 2. Kiểm tra phòng phim (Giữ nguyên logic của bạn)
             if (movie.getRoomId() == null || !checkCimenaExist(movie.getRoomId().longValue())) {
-                return ResponseEntity.ok(new ErrorMessage("404", "Phòng phim không tồn tại!!!", HttpStatus.NOT_FOUND));
+                return ResponseEntity.ok(new ErrorMessage("404", "Phòng phim không tồn tại!!!", "null", HttpStatus.NOT_FOUND));
             }
 
             // ==========================================
@@ -612,7 +612,7 @@ public class MovieService {
                         Optional<Type> realType = typeRepository.findById(typeId.intValue());
                         if (realType.isEmpty()) {
                             return ResponseEntity
-                                    .ok(new ErrorMessage("404", "Loại phim không tồn tại", HttpStatus.NOT_FOUND));
+                                    .ok(new ErrorMessage("404", "Loại phim không tồn tại", "null", HttpStatus.NOT_FOUND));
                         }
                         mt.setType(realType.get());
 
@@ -684,7 +684,7 @@ public class MovieService {
                             if (exists) {
                                 System.out.println("X [STOP] Tra ve loi 409 do trung khung gio.");
                                 return ResponseEntity
-                                        .ok(new ErrorMessage("409", "Khung gio da ton tai.", HttpStatus.CONFLICT));
+                                        .ok(new ErrorMessage("409", "Khung gio da ton tai.", "null", HttpStatus.CONFLICT));
                             }
                             schedule.setShowDate(ms.getShowTime().getShowDate());
                             schedule.setShowTimeId(showTimeDB.getShowTimeId());
@@ -717,7 +717,7 @@ public class MovieService {
             return ResponseEntity.ok(new SuccessMessage("200", "Cập nhật thông tin phim thành công",
                     HttpStatus.OK.name(), LocalDate.now()));
         } catch (Exception e) {
-            return ResponseEntity.ok(new ErrorMessage("500", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
+            return ResponseEntity.ok(new ErrorMessage("500", "Lỗi!!!", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
 

@@ -205,11 +205,11 @@ public class ZaloPaymentService {
     public ResponseEntity<?> checkOrderStatus(String appTransId, String bookingId, String showTimeId) {
         try {
             if (paymentRepository.findByBookingIdAndIsDeleted(bookingId, false).isEmpty()) {
-                return ResponseEntity.ok(new ErrorMessage("404", "Không tìm thấy đơn thanh toán!!!",
+                return ResponseEntity.ok(new ErrorMessage("404", "Không tìm thấy đơn thanh toán!!!", "null",
                         HttpStatus.NOT_FOUND));
             }
             if (paymentRepository.findByAppTransIdAndIsDeleted(appTransId, false).isEmpty()) {
-                return ResponseEntity.ok(new ErrorMessage("404", "Mã thanh toán bị sai. Vui lòng thử lại sau!!!",
+                return ResponseEntity.ok(new ErrorMessage("404", "Mã thanh toán bị sai. Vui lòng thử lại sau!!!", "null",
                         HttpStatus.NOT_FOUND));
             }
             String dataToHash = appId + "|" + appTransId + "|" + key1.trim();

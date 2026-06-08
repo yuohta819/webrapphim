@@ -71,10 +71,10 @@ public class AuthService {
     public ResponseEntity<?> loginMember(Account login) {
         Account account = accountRepository.checkEmail(login.getEmail());
         if (account == null) {
-            return ResponseEntity.ok(new ErrorMessage("404", "Tài khoản hoặc mật khẩu sai", HttpStatus.NOT_FOUND));
+            return ResponseEntity.ok(new ErrorMessage("404", "Tài khoản hoặc mật khẩu sai", "null", HttpStatus.NOT_FOUND));
         }
         if (!passwordEncoder.matches(login.getPassword(), account.getPassword())) {
-            return ResponseEntity.ok(new ErrorMessage("404", "Mật khẩu sai", HttpStatus.NOT_FOUND));
+            return ResponseEntity.ok(new ErrorMessage("404", "Mật khẩu sai","null", HttpStatus.NOT_FOUND));
         }
         Map<String, Object> response = new HashMap<>();
         response.put("token",
@@ -90,7 +90,7 @@ public class AuthService {
     public ResponseEntity<?> create(AccountMemberDto accountMember, String roleAccount) {
         if (accountRepository.checkEmail(accountMember.getAccountMap().getEmail()) != null) {
             return ResponseEntity
-                    .ok(new ErrorMessage("409", "Email, ID Card hoặc Phone đã được đăng kí ",
+                    .ok(new ErrorMessage("409", "Email, ID Card hoặc Phone đã được đăng kí ","null", 
                             HttpStatus.CONFLICT));
         }
         if (roleAccount.equalsIgnoreCase("Member")) {
@@ -125,9 +125,9 @@ public class AuthService {
             }
 
         } catch (Exception e) {
-            // Khối catch này chỉ bắt khi sập server, sai URL, timeout...
-            System.out.println("Lỗi kết nối hệ thống: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi kết nối tới UserService");
+            return ResponseEntity
+                    .ok(new ErrorMessage("409", "Email, ID Card hoặc Phone đã được đăng kí ",e.getMessage(), 
+                            HttpStatus.CONFLICT));
         }
 
     }
@@ -138,16 +138,16 @@ public class AuthService {
         String newPassword = updatePassword.getPasswordNew();
         Account account = accountRepository.getByUserId(updatePassword.getUserId());
         if (account == null) {
-            return ResponseEntity.ok(new ErrorMessage("404", "Tài khoản không tồn tại!!", HttpStatus.NOT_FOUND));
+            return ResponseEntity.ok(new ErrorMessage("404", "Tài khoản không tồn tại!!", null, HttpStatus.NOT_FOUND));
         }
         String key = "Authention:" + account.getEmail();
         String result = redisTemplate.opsForValue().get(key);
         if (result == null || !result.equalsIgnoreCase("true")) {
-            return ResponseEntity.ok(new ErrorMessage("404", "Email chưa được xác nhận!!!!!", HttpStatus.NOT_FOUND));
+            return ResponseEntity.ok(new ErrorMessage("404", "Email chưa được xác nhận!!!!!", null, HttpStatus.NOT_FOUND));
         }
 
         if (!passwordEncoder.matches(oldPassword, account.getPassword())) {
-            return ResponseEntity.ok(new ErrorMessage("404", "Mật khẩu cũ sai", HttpStatus.NOT_FOUND));
+            return ResponseEntity.ok(new ErrorMessage("404", "Mật khẩu cũ sai", null, HttpStatus.NOT_FOUND));
         }
         String hashedPassword = passwordEncoder.encode(newPassword);
         account.setPassword(hashedPassword);
@@ -175,7 +175,7 @@ public class AuthService {
         Optional<Account> account = accountRepository.findByUserId(accountId);
         if (account.isEmpty()) {
             return ResponseEntity
-                    .ok(new ErrorMessage("404", "Không tìm thấy đơn Booking", HttpStatus.NOT_FOUND));
+                    .ok(new ErrorMessage("404", "Không tìm thấy đơn Booking", null, HttpStatus.NOT_FOUND));
         }
         return ResponseEntity.ok(account.get());
     }
@@ -192,7 +192,7 @@ public class AuthService {
     public ResponseEntity<?> findUser(String userId) {
         Account account = accountRepository.getByUserId(userId);
         if (account == null) {
-            return ResponseEntity.ok(new ErrorMessage("404", "Không tìm thấy thông tin!!!", HttpStatus.NOT_FOUND));
+            return ResponseEntity.ok(new ErrorMessage("404", "Không tìm thấy thông tin!!!", "null", HttpStatus.NOT_FOUND));
         }
         return ResponseEntity.ok(account);
     }

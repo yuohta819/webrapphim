@@ -37,11 +37,11 @@ public class PaymentService {
         BookingDTO bookingDTO = getBookingTotalPrice(payment.getBookingId());
         if (bookingDTO == null) {
             return ResponseEntity
-                    .ok(new ErrorMessage("404", "Không tìm thấy mã booking phù hợp", HttpStatus.NOT_FOUND));
+                    .ok(new ErrorMessage("404", "Không tìm thấy mã booking phù hợp", "null", HttpStatus.NOT_FOUND));
         }
         System.out.println(paymentRepository.findByBookingIdAndIsDeleted(payment.getBookingId(), false));
         if (!paymentRepository.findByBookingIdAndIsDeleted(payment.getBookingId(), false).isEmpty()) {
-            return ResponseEntity.ok(new ErrorMessage("409", "Đơn thanh toán đã tồn tại!!!", HttpStatus.CONFLICT));
+            return ResponseEntity.ok(new ErrorMessage("409", "Đơn thanh toán đã tồn tại!!!", "null", HttpStatus.CONFLICT));
 
         }
         payment.setCreatedAt(LocalDateTime.now());

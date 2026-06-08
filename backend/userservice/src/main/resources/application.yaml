@@ -1,6 +1,6 @@
 spring:
   kafka:
-    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -12,11 +12,11 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE} # URL Eureka của bạn
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:http://localhost:8761/eureka/} # URL Eureka của bạn
   instance:
     # Ép service đăng ký bằng IP thay vì Hostname (MSI.mshome.net)
     prefer-ip-address: true
-    instance-id: ${spring.application.name}:${server.port}
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
 springdoc:
   api-docs:
     # Đường dẫn để lấy file JSON định nghĩa API (Ví dụ: http://localhost:8081/v3/api-docs)

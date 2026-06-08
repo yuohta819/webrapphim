@@ -28,7 +28,7 @@ public class BankAccountService {
     public ResponseEntity<?> create(BankAccount bankAccount) {
         UserDTO userDTO = userClient.getUser(bankAccount.getUserId());
         if (userDTO == null) {
-            return ResponseEntity.ok(new ErrorMessage("404", "Tài khoản không tồn tại!!!", HttpStatus.NOT_FOUND));
+            return ResponseEntity.ok(new ErrorMessage("404", "Tài khoản không tồn tại!!!", "null", HttpStatus.NOT_FOUND));
 
         }
         bankAccount.setBankAccountId(generateBankAccountId());
@@ -42,7 +42,7 @@ public class BankAccountService {
         long result = bankAccountRepository.updateIsDeletedStatus(bankAccountId, true);
         if (result == 0) {
             return ResponseEntity
-                    .ok(new ErrorMessage("404", "Không tìm thấy đơn hoàn tiền phù hợp!!!", HttpStatus.NOT_FOUND));
+                    .ok(new ErrorMessage("404", "Không tìm thấy đơn hoàn tiền phù hợp!!!", "null", HttpStatus.NOT_FOUND));
 
         }
         return ResponseEntity.ok(new SuccessMessage("200", "Cập nhật trạng thái thành công!!!",

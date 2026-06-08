@@ -2,10 +2,10 @@ spring:
   application:
     name: room-service
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/roomdb}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:db12345}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.postgresql.Driver}
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,7 +14,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true 
   kafka:
-    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -31,12 +31,11 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE}
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:http://localhost:8761/eureka/}
   instance:
     # Ép service đăng ký bằng IP thay vì Hostname (MSI.mshome.net)
     prefer-ip-address: true
-    hostname: ${HOSTNAME}
-    instance-id: ${spring.application.name}:${server.port}
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
 springdoc:
   api-docs:
     # Đường dẫn để lấy file JSON định nghĩa API (Ví dụ: http://localhost:8081/v3/api-docs)
