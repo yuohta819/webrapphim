@@ -20,6 +20,7 @@ public class AuthserviceApplication {
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 		System.out.println(TimeZone.getDefault().getID());
         app.run(args);
+		// rers
 	}
 
 }
