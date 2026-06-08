@@ -32,6 +32,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import vn.edu.fpt.commonservice.model.ErrorMessage;
 import vn.edu.fpt.commonservice.model.SuccessMessage;
+import vn.edu.fpt.movieservice.client.RoomClient;
 import vn.edu.fpt.movieservice.dto.CountMovieDTO;
 import vn.edu.fpt.movieservice.dto.InforMovie;
 import vn.edu.fpt.movieservice.dto.ScheduleDTO;
@@ -82,7 +83,8 @@ public class MovieService {
     private static final String REDIS_KEY_PREFIX = "movie:";
     @PersistenceContext
     private EntityManager entityManager;
-
+    @Autowired
+    private RoomClient roomClient;
     public ResponseEntity<?> createMovie(Movie movie) {
         try {
             if (movie == null) {
@@ -258,14 +260,7 @@ public class MovieService {
         try {
 
             // lấy danh sách ghế từ room-service
-            String url = "http://localhost:8084/room/find/"
-                    + idRoom;
-
-            List<SeatDTO> seats = restClient.get()
-                    .uri(url)
-                    .retrieve()
-                    .body(new ParameterizedTypeReference<List<SeatDTO>>() {
-                    });
+            List<SeatDTO> seats = roomClient.getRoomSeats(Long.parseLong(idRoom.toString()));
 
             // danh sách ghế của 1 showtime
             List<ScheduleSeat> scheduleSeatsList = new ArrayList<>();
@@ -340,13 +335,8 @@ public class MovieService {
     public Boolean checkCimenaExist(Long roomId) {
         try {
             // lấy danh sách ghế từ room-service
-            String url = "http://localhost:8084/room/find/" + roomId;
 
-            List<SeatDTO> seats = restClient.get()
-                    .uri(url)
-                    .retrieve()
-                    .body(new ParameterizedTypeReference<List<SeatDTO>>() {
-                    });
+            List<SeatDTO> seats = roomClient.getRoomSeats(roomId);
             if (seats.isEmpty()) {
                 return false;
             }
