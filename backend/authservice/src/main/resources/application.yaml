@@ -20,7 +20,7 @@ eureka:
   instance:
     # Ép service đăng ký bằng IP thay vì Hostname (MSI.mshome.net)
     prefer-ip-address: true
-    instance-id: ${spring.application.name}:${server.port}
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
 springdoc:
   api-docs:
     # Đường dẫn để lấy file JSON định nghĩa API (Ví dụ: http://localhost:8081/v3/api-docs)
