@@ -17,7 +17,16 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/userservice/**
-
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # KeyResolver bean dùng để xác định giới hạn theo IP
+                key-resolver: "#{@ipKeyResolver}"
+                # Số lượng token được thêm vào mỗi giây (1/10 = 0.1)
+                redis-rate-limiter.replenishRate: 1
+                # Số lượng request tối đa trong "Burst" (để đạt đúng 1 req/10s)
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
         - id: auth-service
           uri: lb://auth-service
           predicates:

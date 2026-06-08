@@ -1,0 +1,20 @@
+name: Analytics Service CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      # Đường dẫn tới code giờ cần bắt đầu từ backend/
+      - 'backend/analyticsservice/**'
+      - 'backend/commonservice/**'
+      # Đường dẫn tới chính file này giờ nằm ở gốc
+      - '.github/workflows/analyticsservice.yml'
+
+jobs:
+  call-template:
+    # Trỏ đúng đường dẫn mới 
+    uses: ./.github/workflows/service-template.yml
+    with:
+      service_name: 'analytics-service'  # Tên đúng trên K8s
+      folder_name: 'analyticsservice'    # Tên đúng trong thư mục
+    secrets: inherit
