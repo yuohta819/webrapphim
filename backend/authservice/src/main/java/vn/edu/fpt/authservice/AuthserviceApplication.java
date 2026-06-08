@@ -15,8 +15,10 @@ public class AuthserviceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(AuthserviceApplication.class);
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+		
         app.setWebApplicationType(WebApplicationType.SERVLET); // Ép ứng dụng giữ luồng chạy web không tự tắt
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+		System.out.println(TimeZone.getDefault().getID());
         app.run(args);
 	}
 
