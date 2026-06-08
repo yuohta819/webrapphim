@@ -228,6 +228,7 @@ public class MovieService {
             return ResponseEntity
                     .ok(new SuccessMessage("200", "Tạo movie thành công", HttpStatus.OK.name(), LocalDate.now()));
         } catch (Exception e) {
+            System.out.println(e.getMessage() + " check");
             return ResponseEntity
                     .ok(new ErrorMessage("409", "Lỗi dữ liệu không hợp lệ!!!!.", HttpStatus.INTERNAL_SERVER_ERROR));
         }
