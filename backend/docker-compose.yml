@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "db12345"
-      POSTGRES_DB: authdb
+      POSTGRES_DB: moviedb
     ports:
       - "5432:5432"
     networks:

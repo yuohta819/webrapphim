@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import vn.edu.fpt.movieservice.dto.SeatDTO;
 
-@Component
+
 @FeignClient(name = "room-service", path = "/roomservice/room")
 public interface RoomClient {
     @GetMapping("/find/{roomId}")
