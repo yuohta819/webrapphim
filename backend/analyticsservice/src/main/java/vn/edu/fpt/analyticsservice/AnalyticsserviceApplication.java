@@ -9,5 +9,5 @@ public class AnalyticsserviceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AnalyticsserviceApplication.class, args);
 	}
-
+	// sada
 }    

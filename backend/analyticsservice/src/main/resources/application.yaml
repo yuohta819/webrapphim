@@ -29,6 +29,8 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE}
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 5
   instance:
     # Ép service đăng ký bằng IP thay vì Hostname (MSI.mshome.net)
     prefer-ip-address: true
