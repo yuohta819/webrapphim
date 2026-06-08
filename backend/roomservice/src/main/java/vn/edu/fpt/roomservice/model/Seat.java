@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-// test
+// te
 @Entity
 @Table(name = "seat")
 @Getter
