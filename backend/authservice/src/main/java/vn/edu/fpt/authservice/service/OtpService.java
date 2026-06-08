@@ -3,15 +3,16 @@ package vn.edu.fpt.authservice.service;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.messaging.support.ErrorMessage;
 import org.springframework.stereotype.Service;
 
+import vn.edu.fpt.commonservice.model.ErrorMessage;
 import vn.edu.fpt.commonservice.model.SuccessMessage;
 
 @Service
@@ -31,6 +32,11 @@ public class OtpService {
         // Sinh mã ngẫu nhiên 6 chữ số
         String otpCode = String.format("%06d", new Random().nextInt(999999));
         String key = OTP_PREFIX + email;
+        if (!isAllowed(email)) {
+            // Ném ra một Custom Exception để Controller bắt và trả về 429
+            return ResponseEntity
+                .ok(new ErrorMessage("429", "Không được gửi quá nhiều mã!!!", HttpStatus.TOO_MANY_REQUESTS));
+        }
         // Lưu vào Redis với TTL là 5 phút
         redisTemplate.opsForValue().set(key, otpCode, Duration.ofMinutes(OTP_VALID_DURATION_MINUTES));
         kafkaTemplate.send(TOPIC_EMAIL_CODE, email);
@@ -77,5 +83,23 @@ public class OtpService {
         }
         return ResponseEntity
                 .ok(new SuccessMessage("200", "Mã OTP hợp lệ", HttpStatus.ACCEPTED.name(), LocalDate.now()));
+    }
+
+    public boolean isAllowed(String email) {
+        String key = "mail_limit:" + email;
+        Long count = redisTemplate.opsForValue().increment(key);
+
+        if (count == 1) {
+            // Set thời hạn 60 giây cho mỗi lần gửi
+            redisTemplate.expire(key, 10, TimeUnit.MINUTES);
+            return true;
+        }
+        
+        // Nếu số lần gửi vượt quá 5 lần trong 60 giây (ví dụ)
+        if (count > 1) {
+            return false;
+        }
+        
+        return true;
     }
 }

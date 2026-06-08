@@ -85,6 +85,14 @@
             <version>2.3.1</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
+        </dependency>
+        <dependency>
             <groupId>vn.edu.fpt</groupId>
             <artifactId>commonservice</artifactId>
             <version>0.0.1-SNAPSHOT</version>

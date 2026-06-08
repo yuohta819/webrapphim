@@ -4,7 +4,12 @@ server:
 spring:
   application:
     name: api-gateway
-
+  data:
+    redis:
+      host: ${REDIS_HOST:redis} # Tên container trong docker-compose
+      port: ${REDIS_PORT:6379}
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     gateway:
       routes:
@@ -17,6 +22,16 @@ spring:
           uri: lb://auth-service
           predicates:
             - Path=/authservice/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # KeyResolver bean dùng để xác định giới hạn theo IP
+                key-resolver: "#{@ipKeyResolver}"
+                # Số lượng token được thêm vào mỗi giây (1/10 = 0.1)
+                redis-rate-limiter.replenishRate: 1
+                # Số lượng request tối đa trong "Burst" (để đạt đúng 1 req/10s)
+                redis-rate-limiter.burstCapacity: 1
+                redis-rate-limiter.requestedTokens: 1
         - id: movie-service
           uri: lb://movie-service
           predicates:
@@ -84,7 +99,7 @@ springdoc:
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE}
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:http://localhost:8761/eureka/}
 
 management:
   endpoints:
@@ -92,4 +107,9 @@ management:
       exposure:
         include: "*"
 jwt:
-  secret: ${JWT_SECRET}
+  secret: ${JWT_SECRET:MySuperSecretKeyThatIsAtLeast32CharactersLong!}
+logging:
+  level:
+    org.springframework.cloud.gateway.filter.ratelimit: DEBUG
+    org.springframework.data.redis: DEBUG
+

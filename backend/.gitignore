@@ -7,7 +7,7 @@ application-dev.properties
 .env
 microservices-deploy.yaml
 infrastructure.yaml
-
+docker-compose.yaml
 
 
 actions-runner/
