@@ -15,6 +15,6 @@ jobs:
     # Trỏ đúng đường dẫn mới 
     uses: ./.github/workflows/service-template.yml
     with:
-      service_name: 'bankaccount-service'  # Tên đúng trên K8s
+      service_name: 'bank-account-service'  # Tên đúng trên K8s
       folder_name: 'bankaccountservice'    # Tên đúng trong thư mục
     secrets: inherit
