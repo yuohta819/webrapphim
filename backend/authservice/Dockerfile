@@ -1,21 +1,21 @@
-﻿# Tầng 1: Build
-FROM maven:3.9.6-eclipse-temurin-21 AS build
+﻿# STAGE 1: Build (đặt tên là "build")
+FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 
-# Copy cả folder backend để giữ cấu trúc project
-COPY backend/commonservice ./commonservice
-COPY backend/authservice ./authservice
+# Copy file pom.xml trước để tận dụng Docker layer caching
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
-# Build commonservice trước
-RUN mvn -f commonservice/pom.xml clean install -DskipTests -q
+# Copy toàn bộ source và thực hiện build
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Build authservice (sẽ tự động lấy commonservice từ local repo đã install)
-RUN mvn -f authservice/pom.xml clean package -DskipTests -q
-
-# Tầng 2: Chạy
-FROM eclipse-temurin:21-jre-alpine
+# STAGE 2: Runtime (Image cuối cùng)
+FROM openjdk:17-jdk-slim
 WORKDIR /app
-# Copy file jar từ target của authservice
-COPY --from=build /app/authservice/target/*.jar app.jar
-EXPOSE 8080
+
+# Chỉ copy file jar đã build từ stage "build" sang
+COPY --from=build /app/target/my-service.jar app.jar
+
+# Chạy ứng dụng
 ENTRYPOINT ["java", "-jar", "app.jar"]
