@@ -24,11 +24,17 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-
+      - name: Cache local Maven repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
       - name: Build Shared Libraries
         shell: cmd
         # Thêm backend/ vào trước
-        run: cd backend/commonservice && mvn clean install -DskipTests
+        run: cd backend/commonservice && mvn clean install -DskipTests -T 1C
 
       - name: Build Service
         shell: cmd
