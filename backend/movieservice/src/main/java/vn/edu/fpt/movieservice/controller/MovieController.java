@@ -16,6 +16,7 @@ import vn.edu.fpt.movieservice.dto.ShowTimeDTO;
 import vn.edu.fpt.movieservice.dto.ShowtimeLookupRequest;
 import vn.edu.fpt.movieservice.model.Movie;
 import vn.edu.fpt.movieservice.model.ShowTime;
+import vn.edu.fpt.movieservice.service.MoviePosterUploader;
 import vn.edu.fpt.movieservice.service.MovieService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,11 +24,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/movie")
+@Tag(name = "Movie Controller", description = "APIs for managing movies")
 public class MovieController {
     @Autowired
     private MovieService movieService;
+    @Autowired
+    private  MoviePosterUploader uploader;
 
     @PostMapping("/role-not-member/create")
     public ResponseEntity<?> postMethodName(@RequestBody Movie movie) {
@@ -36,7 +42,8 @@ public class MovieController {
             return movieService.createMovie(movie);
         } catch (Exception e) {
             return ResponseEntity
-                    .ok(new ErrorMessage("409", "Lỗi dữ liệu không hợp lệ!!!!.",e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
+                    .ok(new ErrorMessage("409", "Lỗi dữ liệu không hợp lệ!!!!.", e.getMessage(),
+                            HttpStatus.INTERNAL_SERVER_ERROR));
 
         }
     }
@@ -79,7 +86,7 @@ public class MovieController {
                 request.getShowTimeIds());
     }
 
-    @GetMapping("/role-employee/find-all")
+    @GetMapping("/find-all")
     public List<Movie> getMethodName() {
         return movieService.findAllMovie();
     }
@@ -101,4 +108,8 @@ public class MovieController {
         return movieService.update(movie);
     }
 
+    @PostMapping("/posters")
+    public List<String> uploadPosters() {
+        return uploader.uploadAllPosters();
+    }
 }
